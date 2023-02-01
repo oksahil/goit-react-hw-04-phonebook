@@ -1,0 +1,19 @@
+.menu {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    margin-top: 35px;
+}
+
+.link {
+    display: inline-block;
+    padding: 10px 20px;
+    border: 1px solid gray;
+    color: gray;
+    text-decoration: none;
+}
+
+.link.active {
+    background-color: gray;
+    color: white;
+}

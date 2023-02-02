@@ -1,27 +1,16 @@
-import { Component } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
+
 import css from "./mainMenu.module.css";
 
-class MainMenu extends Component {
+const MainMenu = ({ items }) => {
+    const [activeIndex, setActiveIndex] = useState(1);
 
-    static defaultProps = {
-        items: []
-    }
+    const handelClick = ind => setActiveIndex(ind);
 
-    state = {
-        activeIndex: 1,
-    }
-
-handelClick = (ind) => {
-    this.setState({ activeIndex: ind})
-}
-
-    render(){
-    const { items } = this.props;
-    const { activeIndex } = this.state;
-        const elementMenu = items.map(({ id, title, link }, index) => 
+    const elementMenu = items.map(({ id, title, link }, index) => 
             <li key={id}>
-                <a onClick={()=> this.handelClick(index)} className={activeIndex === index ? `${ css.link } ${ css.active }` : css.link} href = {link}>{title}</a>
+                <a onClick={()=> handelClick(index)} className={activeIndex === index ? `${ css.link } ${ css.active }` : css.link} href = {link}>{title}</a>
             </li>
         )
         return (
@@ -30,6 +19,9 @@ handelClick = (ind) => {
             </ul>
         )    
     }
+
+MainMenu.defaultProps = {
+    items: []
 }
 
 export default MainMenu;

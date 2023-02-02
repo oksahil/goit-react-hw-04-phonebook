@@ -64,7 +64,7 @@ isDublicate(name, number) {
     const normNumber = number.toLowerCase();
     const { contacts } = this.state;
     const person = contacts.find(({ name, number }) => {
-        return (name.toLowerCase() === normName && number.toLowerCase() === normNumber)
+        return (name.toLowerCase() === normName || number.toLowerCase() === normNumber)
     })
     return Boolean(person)
 }   

@@ -1,38 +1,34 @@
-import { Component } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
 
-import inititalState from "./initialState";
 import Button from "shared/components/Button/Button";
+import inititalState from "./initialState";
 
 import css from "./myPhoneForm.module.css";
 
-class MyPhoneForm extends Component {
-    state = { ...inititalState } 
 
-handleSubmit = (e) => {
+const MyPhoneForm = ({ onSubmit }) => {
+    const [state, setState] = useState({ ...inititalState });
+
+const handleChange = ({target}) => {
+    const { name, value } = target;
+    setState(prevState => {
+        return { ...prevState, [name]: value };
+    })
+}
+
+const handleSubmit = (e) => {
     e.preventDefault();
-    const { onSubmit } = this.props;
-    const resultSubmit = onSubmit({ ...this.state });
+    
+    const resultSubmit = onSubmit({name, number});
         if(resultSubmit) {
-            this.reset();
+            setState({ ...inititalState });
         }
 }
 
-reset() {
-        this.setState({...inititalState})
-}    
+const { name, number } = state;
     
-handleChange = ({target}) => {
-    const { name, value } = target;
-    this.setState({
-        [name]: value,
-    })
-    }
-    
-render() {
-    const { handleChange, handleSubmit } = this;
-    const { name, number } = this.state;
-    return (
+return (
          <form action="" onSubmit={handleSubmit}>
             <div className={css.formInput}>
                 <label className={css.labelText}>Name:</label>
@@ -61,7 +57,6 @@ render() {
             <Button type="submit">Add contact</Button>
         </form>
         )
-    }
 }
 
 export default MyPhoneForm;

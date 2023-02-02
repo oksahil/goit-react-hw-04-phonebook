@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { useState } from "react";
 import { nanoid } from 'nanoid';
 
 import MyPhoneForm from "./MyPhoneForm/MyPhoneForm";
@@ -6,85 +6,70 @@ import ContactsList from "./ContactsList/ContactsList";
 import MyPhoneFilter from "./MyPhoneFilter/MyPhoneFilter";
 
 import Message from "shared/components/Message/Message";
+// import contacts from "./contacts";
 
 import css from "./myPhone.module.css";
 
-class MyPhone extends Component {
-    state = {
-        contacts:[],
-        filter: "",
-    }
+const MyPhone = () => {
+    const [items, setItems] = useState([]);
+    const [filter, setFilter] = useState("");
 
-componentDidMount() {
-    const contacts = JSON.parse(localStorage.getItem("my-phonebook"));
-    if (contacts?.length) //contacts && contacts.length
-    {
-        this.setState({ contacts });
-    }
-}
-
-componentDidUpdate(prevProps, prevState) {
-    const { contacts } = this.state;
-    if (prevState.contacts.length !== contacts.length) {
-        localStorage.setItem("my-phonebook", JSON.stringify(contacts));
-    }
-}
-
-addContact = ({name, number}) => {
-        if (this.isDublicate(name, number)) {
-            alert(`${name} is already ixist`);
-            return false;
-        }
-    this.setState(prevState => {
-        const { contacts } = prevState;
-
-        const newContact = {
-            id: nanoid(),
-            name,
-            number,
-        }
-        return {contacts: [newContact, ...contacts]}
-    })
-    return true;
-}
-
-removeContact = (id) => {
-    this.setState(({contacts}) => {
-        const newContacts = contacts.filter(contact => contact.id !== id);
-        return {contacts: newContacts}
-    })
-}
-
-handleFilter = ({target})=> {
-        this.setState({filter: target.value})
-}
-    
-isDublicate(name, number) {
+const isDublicate = (name, number)=> {
     const normName = name.toLowerCase();
     const normNumber = number.toLowerCase();
-    const { contacts } = this.state;
     const person = contacts.find(({ name, number }) => {
         return (name.toLowerCase() === normName || number.toLowerCase() === normNumber)
     })
     return Boolean(person)
-}   
+    }  
 
-filterContacts() {
-    const { filter, contacts } = this.state;
+const addContact = ({name, number}) => {
+        if (isDublicate(name, number)) {
+            alert(`${name} is already ixist`);
+            return false;
+        }
+        setItems(prevContacts => {
+            const newContact = {
+                id: nanoid(),
+                name,
+                number,
+            }
+            return [newContact, ...contacts];
+        })
+        return true;
+    }
+
+    const removeContact = (id) => { setItems((prevContacts) => prevContacts.filter(contact => contact.id !== id)) };
+
+    const handleFilter = ({ target }) => setFilter(target.value);
+
+const filterContacts=() => {
     if (!filter) {
-        return contacts;
+        return items;
     }
     const normFilter = filter.toLowerCase();
-    const result = contacts.filter(({ name, number }) => {
+    const result = items.filter(({ name, number }) => {
         return (name.toLowerCase().includes(normFilter) || number.toLowerCase().includes(normFilter))
     })
     return result;
-}    
-    
-render() {
-    const { addContact, removeContact, handleFilter } = this;
-   
-    const contacts = this.filterContacts();
+    }     
+
+// const componentDidMount=() =>{
+//     const contacts = JSON.parse(localStorage.getItem("my-phonebook"));
+//     if (contacts?.length) //contacts && contacts.length
+//     {
+//         setItems({ contacts });
+//     }
+// }
+
+// const componentDidUpdate=(prevProps, prevState) =>{
+//     const { contacts } = this.state;
+//     if (prevState.contacts.length !== contacts.length) {
+//         localStorage.setItems("my-phonebook", JSON.stringify(contacts));
+//     }
+// }    
+
+    const contacts = filterContacts();
     const isPerson = Boolean(contacts.length);
         return (
             <div>
@@ -105,6 +90,5 @@ render() {
             </div>
         )
     }
-}
 
 export default MyPhone; 

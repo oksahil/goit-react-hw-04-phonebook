@@ -20,7 +20,7 @@ const ContactsList = ({contacts, removeContact}) => {
 export default ContactsList;
 
 ContactsList.defaultPrors = {
-    cotacts: []
+    contacts: []
 }
 
 ContactsList.propTypes = {

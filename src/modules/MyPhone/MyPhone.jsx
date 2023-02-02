@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { nanoid } from 'nanoid';
 
 import MyPhoneForm from "./MyPhoneForm/MyPhoneForm";
@@ -6,13 +6,19 @@ import ContactsList from "./ContactsList/ContactsList";
 import MyPhoneFilter from "./MyPhoneFilter/MyPhoneFilter";
 
 import Message from "shared/components/Message/Message";
-// import contacts from "./contacts";
 
 import css from "./myPhone.module.css";
 
 const MyPhone = () => {
-    const [items, setItems] = useState([]);
+    const [phones, setPhones] = useState(() => {
+        const phones = JSON.parse(localStorage.getItem("my-phonebook"));
+        return phones ? phones : [];
+    });
     const [filter, setFilter] = useState("");
+
+    useEffect(() => {
+        localStorage.setItem("my-phonebook", JSON.stringify(phones));
+    }, [phones]);   
 
 const isDublicate = (name, number)=> {
     const normName = name.toLowerCase();
@@ -28,46 +34,33 @@ const addContact = ({name, number}) => {
             alert(`${name} is already ixist`);
             return false;
         }
-        setItems(prevContacts => {
-            const newContact = {
+        setPhones(prevPhones => {
+            const newPhones = {
                 id: nanoid(),
                 name,
                 number,
             }
-            return [newContact, ...contacts];
+            return [newPhones, ...phones];
         })
         return true;
     }
 
-    const removeContact = (id) => { setItems((prevContacts) => prevContacts.filter(contact => contact.id !== id)) };
+    const removeContact = (id) => { setPhones((prevPhones) => prevPhones.filter(phone => phone.id !== id)) };
 
     const handleFilter = ({ target }) => setFilter(target.value);
 
 const filterContacts=() => {
     if (!filter) {
-        return items;
+        return phones;
     }
     const normFilter = filter.toLowerCase();
-    const result = items.filter(({ name, number }) => {
+    const result = phones.filter(({ name, number }) => {
         return (name.toLowerCase().includes(normFilter) || number.toLowerCase().includes(normFilter))
     })
     return result;
     }     
 
-// const componentDidMount=() =>{
-//     const contacts = JSON.parse(localStorage.getItem("my-phonebook"));
-//     if (contacts?.length) //contacts && contacts.length
-//     {
-//         setItems({ contacts });
-//     }
-// }
-
-// const componentDidUpdate=(prevProps, prevState) =>{
-//     const { contacts } = this.state;
-//     if (prevState.contacts.length !== contacts.length) {
-//         localStorage.setItems("my-phonebook", JSON.stringify(contacts));
-//     }
-// }    
+   
 
     const contacts = filterContacts();
     const isPerson = Boolean(contacts.length);

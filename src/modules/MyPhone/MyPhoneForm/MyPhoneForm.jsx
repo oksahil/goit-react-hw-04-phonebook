@@ -2,13 +2,13 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 
 import Button from "shared/components/Button/Button";
-import inititalState from "./initialState";
+import initialState from "./initialState";
 
 import css from "./myPhoneForm.module.css";
 
 
 const MyPhoneForm = ({ onSubmit }) => {
-    const [state, setState] = useState({ ...inititalState });
+    const [state, setState] = useState({ ...initialState });
 
 const handleChange = ({target}) => {
     const { name, value } = target;
@@ -20,9 +20,9 @@ const handleChange = ({target}) => {
 const handleSubmit = (e) => {
     e.preventDefault();
     
-    const resultSubmit = onSubmit({name, number});
+    const resultSubmit = onSubmit(({...state}));
         if(resultSubmit) {
-            setState({ ...inititalState });
+            setState({ ...initialState });
         }
 }
 

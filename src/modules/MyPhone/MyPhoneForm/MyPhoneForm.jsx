@@ -1,6 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 
+// import useForm from "shared/hooks/useForm";
 import Button from "shared/components/Button/Button";
 import initialState from "./initialState";
 
@@ -8,6 +9,7 @@ import css from "./myPhoneForm.module.css";
 
 
 const MyPhoneForm = ({ onSubmit }) => {
+    // const [state, handleChange, handleSubmit] = useForm({initialState, onSubmit });
     const [state, setState] = useState({ ...initialState });
 
 const handleChange = ({target}) => {

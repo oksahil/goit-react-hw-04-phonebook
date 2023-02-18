@@ -20,4 +20,5 @@ export default MyPhoneFilter;
 
 MyPhoneFilter.propTypes = {
     handleChange: PropTypes.func.isRequired,
+    filter: PropTypes.string.isRequired,
 }
